@@ -255,6 +255,7 @@
             border-radius: 5px;
             cursor: pointer;
             transition: all 0.3s;
+            margin: 0 10px;
         }
 
         .final-screen button:hover {
@@ -317,6 +318,31 @@
             box-shadow: 0 0 15px rgba(19, 194, 171, 0.5);
             transform: scale(1.05);
         }
+
+        .leaderboard {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .leaderboard h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .leaderboard-entry {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .leaderboard-entry:last-child {
+            border-bottom: none;
+        }
     </style>
 </head>
 
@@ -370,7 +396,14 @@
         <div class="glass-panel">
             <h1>Congratulations!</h1>
             <p id="finalScore"></p>
-            <button onclick="resetGame()">Play Again</button>
+            <div>
+                <button onclick="resetGame()">Play Again</button>
+                <button onclick="resetLeaderboard()">Reset Leaderboard</button>
+            </div>
+            <div class="leaderboard">
+                <h3>Leaderboard</h3>
+                <div id="leaderboardEntries"></div>
+            </div>
         </div>
     </div>
 
@@ -379,7 +412,9 @@
         let questionIndex = 0;
         let classLevel = "";
         let points = 0;
+        let username = "";
         let completedRooms = new Set();
+        let leaderboard = [];
         const questions = {
             Math: {
                 6: {
@@ -449,6 +484,13 @@
             },
         };
 
+        // Load leaderboard from localStorage when page loads
+        window.onload = function() {
+            if (localStorage.getItem('leaderboard')) {
+                leaderboard = JSON.parse(localStorage.getItem('leaderboard'));
+            }
+        };
+
         function updatePointsDisplay() {
             document.getElementById("pointsCounter").textContent = points;
         }
@@ -459,11 +501,18 @@
         }
 
         function startGame() {
+            username = document.getElementById("username").value.trim();
+            if (username === "") {
+                alert("Please enter a username.");
+                return;
+            }
+            
             classLevel = document.getElementById("classSelect").value;
             if (classLevel === "") {
                 alert("Please select your class.");
                 return;
             }
+            
             document.getElementById("loginScreen").style.display = "none";
             document.getElementById("doorsScreen").style.display = "flex";
         }
@@ -549,6 +598,7 @@
                 }
 
                 if (completedRooms.size === 3) {
+                    updateLeaderboard();
                     showFinalScreen();
                 } else {
                     alert("You have escaped the " + currentSubject + " room!");
@@ -558,11 +608,65 @@
             }
         }
 
+        function updateLeaderboard() {
+            // Check if user already exists in leaderboard
+            const existingEntryIndex = leaderboard.findIndex(entry => entry.username === username);
+            
+            if (existingEntryIndex !== -1) {
+                // Update score if it's higher than previous
+                if (points > leaderboard[existingEntryIndex].points) {
+                    leaderboard[existingEntryIndex].points = points;
+                }
+            } else {
+                // Add new entry
+                leaderboard.push({ username: username, points: points });
+            }
+            
+            // Sort leaderboard by points (highest first)
+            leaderboard.sort((a, b) => b.points - a.points);
+            
+            // Save to localStorage
+            localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+        }
+
+        function displayLeaderboard() {
+            const leaderboardContainer = document.getElementById("leaderboardEntries");
+            leaderboardContainer.innerHTML = "";
+            
+            if (leaderboard.length === 0) {
+                leaderboardContainer.innerHTML = "<p>No entries yet</p>";
+                return;
+            }
+            
+            // Display top 10 entries or all if less than 10
+            const entriesToShow = Math.min(leaderboard.length, 10);
+            
+            for (let i = 0; i < entriesToShow; i++) {
+                const entry = leaderboard[i];
+                const entryElement = document.createElement("div");
+                entryElement.className = "leaderboard-entry";
+                entryElement.innerHTML = `
+                    <span>${i + 1}. ${entry.username}</span>
+                    <span>${entry.points} points</span>
+                `;
+                leaderboardContainer.appendChild(entryElement);
+            }
+        }
+
+        function resetLeaderboard() {
+            if (confirm("Are you sure you want to reset the leaderboard? This action cannot be undone.")) {
+                leaderboard = [];
+                localStorage.removeItem('leaderboard');
+                displayLeaderboard();
+            }
+        }
+
         function showFinalScreen() {
             document.getElementById("questionContainer").style.display = "none";
             document.getElementById("doorsScreen").style.display = "none";
             document.getElementById("finalScreen").style.display = "flex";
             document.getElementById("finalScore").textContent = "You Escaped the School with " + points + " points!";
+            displayLeaderboard();
         }
 
         function resetGame() {
@@ -570,6 +674,7 @@
             points = 0;
             currentSubject = "";
             questionIndex = 0;
+            username = "";
             classLevel = "";
             completedRooms = new Set();
 
