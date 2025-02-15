@@ -51,15 +51,36 @@
             text-shadow: 2px 2px 5px #000;
         }
 
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            padding: 40px;
+            max-width: 80%;
+        }
+
         .start-button {
             color: #ffffff;
             font-size: 16px;
             font-weight: 500;
-            padding: 10px;
-            background: #13c2ab;
+            padding: 10px 20px;
+            background: rgba(19, 194, 171, 0.8);
             text-decoration: none;
             border: none;
             border-radius: 4px;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+
+        .start-button:hover {
+            background: rgba(19, 194, 171, 1);
+            box-shadow: 0 0 15px rgba(19, 194, 171, 0.5);
+            transform: scale(1.05);
         }
 
         .overlay {
@@ -99,7 +120,6 @@
         }
 
         .door {
-
             width: 22pc;
             height: 37pc;
             padding: 20px;
@@ -112,7 +132,6 @@
             cursor: pointer;
             transition: transform 0.3s;
             margin-left: 63px;
-
         }
 
         .door.completed {
@@ -145,9 +164,12 @@
             top: 20px;
             right: 20px;
             background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
             padding: 10px 20px;
             border-radius: 5px;
             font-size: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
         }
 
         .final-screen {
@@ -174,26 +196,46 @@
         .final-screen button {
             padding: 12px 24px;
             font-size: 18px;
-            background-color: #4CAF50;
+            background-color: rgba(76, 175, 80, 0.8);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
         }
 
         .final-screen button:hover {
-            background-color: #45a049;
+            background-color: rgba(76, 175, 80, 1);
+            box-shadow: 0 0 15px rgba(76, 175, 80, 0.5);
+            transform: scale(1.05);
         }
 
         input,
-        select,
-        button {
+        select {
             padding: 8px 16px;
             margin: 5px;
             font-size: 16px;
             border-radius: 4px;
-            border: 1px solid #ccc;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23FFFFFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.7em top 50%;
+            background-size: 0.65em auto;
+            padding-right: 2.5em;
         }
 
         button {
@@ -203,13 +245,18 @@
             font-size: 16px;
             font-weight: 500;
             padding: 10px;
-            background: #13c2ab;
+            background: rgba(19, 194, 171, 0.8);
             text-decoration: none;
             border-radius: 4px;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            transition: all 0.3s;
         }
 
         button:hover {
-            background: #13c2ab;
+            background: rgba(19, 194, 171, 1);
+            box-shadow: 0 0 15px rgba(19, 194, 171, 0.5);
+            transform: scale(1.05);
         }
     </style>
 </head>
@@ -218,25 +265,28 @@
     <div class="points-display">Points: <span id="pointsCounter">0</span></div>
 
     <div id="startScreen" class="overlay">
-        <h1>Escape The School</h1>
-        <p style="font-size: larger;   text-shadow: 2px 2px 5px #000;" >You are trapped in a mysterious school. Solve subject-related puzzles to unlock doors and find your way out!
-        </p>
-        <button class="start-button" onclick="goToLogin()">Start The Game</button>
+        <div class="glass-panel">
+            <h1>Escape The School</h1>
+            <p style="font-size: larger; text-shadow: 2px 2px 5px #000;">You are trapped in a mysterious school. Solve subject-related puzzles to unlock doors and find your way out!</p>
+            <button class="start-button" onclick="goToLogin()">Start The Game</button>
+        </div>
     </div>
 
     <div id="loginScreen" class="overlay" style="display:none;">
-        <h1>Enter Your Details</h1>
-        <div>
-            <input type="text" id="username" placeholder="Enter your username" required>
-            <select id="classSelect" required>
-                <option value="">Select your class</option>
-                <option value="6">6th</option>
-                <option value="7">7th</option>
-                <option value="8">8th</option>
-                <option value="9">9th</option>
-                <option value="10">10th</option>
-            </select>
-            <button class="login-button" onclick="startGame()">Start</button>
+        <div class="glass-panel">
+            <h1>Enter Your Details</h1>
+            <div>
+                <input type="text" id="username" placeholder="Enter your username" required>
+                <select id="classSelect" required>
+                    <option value="">Select your class</option>
+                    <option value="6">6th</option>
+                    <option value="7">7th</option>
+                    <option value="8">8th</option>
+                    <option value="9">9th</option>
+                    <option value="10">10th</option>
+                </select>
+                <button class="login-button" onclick="startGame()">Start</button>
+            </div>
         </div>
     </div>
 
@@ -250,7 +300,7 @@
     </div>
 
     <div id="questionContainer" class="question-container">
-        <h2 style="font-size: larger;   text-shadow: 2px 2px 5px #000;" id="storyText"></h2>
+        <h2 style="font-size: larger; text-shadow: 2px 2px 5px #000;" id="storyText"></h2>
         <h2 id="questionText">Question</h2>
         <input type="text" id="answerInput" placeholder="Enter your answer">
         <button onclick="checkAnswer()">Submit</button>
@@ -258,9 +308,11 @@
     </div>
 
     <div id="finalScreen" class="final-screen">
-        <h1>Congratulations!</h1>
-        <p id="finalScore"></p>
-        <button onclick="resetGame()">play Again</button>
+        <div class="glass-panel">
+            <h1>Congratulations!</h1>
+            <p id="finalScore"></p>
+            <button onclick="resetGame()">Play Again</button>
+        </div>
     </div>
 
     <script>
@@ -417,7 +469,7 @@
                 points += 2;
                 document.getElementById("feedback").innerText = "Correct! 🎉 (+2 points)";
             } else {
-                points = Math.max(0, points - 1); // Prevent negative points
+                points = Math.max(0, points - 1); 
                 document.getElementById("feedback").innerText = "Incorrect. Try again! ❌ (-1 point)";
                 updatePointsDisplay();
                 return;
@@ -451,30 +503,30 @@
             document.getElementById("questionContainer").style.display = "none";
             document.getElementById("doorsScreen").style.display = "none";
             document.getElementById("finalScreen").style.display = "flex";
-            document.getElementById("finalScore").textContent = "You Escaped the School with ${points} points!";
+            document.getElementById("finalScore").textContent = "You Escaped the School with " + points + " points!";
         }
 
         function resetGame() {
-            // Reset all game variables
+           
             points = 0;
             currentSubject = "";
             questionIndex = 0;
             classLevel = "";
             completedRooms = new Set();
 
-            // Reset UI elements
+           
             updatePointsDisplay();
             document.getElementById("username").value = "";
             document.getElementById("classSelect").value = "";
             document.getElementById("answerInput").value = "";
             document.getElementById("feedback").innerText = "";
 
-            // Remove completed class from all doors
+           
             document.querySelectorAll('.door').forEach(door => {
                 door.classList.remove('completed');
             });
 
-            // Hide all screens except start screen
+            
             document.getElementById("finalScreen").style.display = "none";
             document.getElementById("questionContainer").style.display = "none";
             document.getElementById("doorsScreen").style.display = "none";
