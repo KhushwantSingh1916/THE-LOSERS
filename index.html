@@ -50,7 +50,8 @@
             margin-bottom: 30px;
             text-shadow: 2px 2px 5px #000;
         }
-        
+
+        /* Glass effect for start and login screens */
         .glass-panel {
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
@@ -96,11 +97,12 @@
         }
 
         h2#questionText {
-            background-color: white;
+            background-color: rgba(255, 255, 255, 0.9);
             color: #000;
             padding: 20px;
             width: 50vw;
             border-radius: 5px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
         .doors-screen {
@@ -113,24 +115,56 @@
             background-position: center;
         }
 
+        .doors-screen h1 {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px 30px;
+            border-radius: 8px;
+            margin-bottom: 50px;
+        }
+
         .doors {
             display: flex;
-            gap: 169px;
+            gap: 100px;
+            justify-content: center;
+            margin-top: 20px;
         }
 
         .door {
-            width: 22pc;
-            height: 37pc;
-            padding: 20px;
+            width: 200px;
+            height: 350px;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
             text-align: center;
             color: white;
-            font-size: 38px;
+            font-size: 30px;
+            font-weight: bold;
             display: flex;
-            align-items: top;
+            align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: transform 0.3s;
-            margin-left: 63px;
+            transition: all 0.3s;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            position: relative;
+        }
+
+        .door span {
+            z-index: 2;
+        }
+
+        .door:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            z-index: 1;
         }
 
         .door.completed {
@@ -139,7 +173,8 @@
         }
 
         .door:hover:not(.completed) {
-            transform: scale(1.1);
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
         }
 
         .question-container {
@@ -153,9 +188,23 @@
             padding: 20px;
         }
 
+        #storyText {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 8px;
+            padding: 15px 25px;
+            margin-bottom: 25px;
+            max-width: 80%;
+            text-align: center;
+        }
+
         #feedback {
-            margin-top: 10px;
+            margin-top: 20px;
             font-size: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 10px 20px;
+            border-radius: 5px;
+            min-width: 200px;
+            text-align: center;
         }
 
         .points-display {
@@ -169,6 +218,7 @@
             border-radius: 5px;
             font-size: 18px;
             border: 1px solid rgba(255, 255, 255, 0.18);
+            z-index: 1000;
         }
 
         .final-screen {
@@ -228,6 +278,12 @@
             color: rgba(255, 255, 255, 0.7);
         }
 
+        #answerInput {
+            margin-top: 20px;
+            width: 300px;
+            text-align: center;
+        }
+
         select {
             appearance: none;
             background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23FFFFFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
@@ -243,13 +299,14 @@
             color: #ffffff;
             font-size: 16px;
             font-weight: 500;
-            padding: 10px;
+            padding: 10px 20px;
             background: rgba(19, 194, 171, 0.8);
             text-decoration: none;
             border-radius: 4px;
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
             transition: all 0.3s;
+            margin-top: 15px;
         }
 
         button:hover {
@@ -292,9 +349,9 @@
     <div id="doorsScreen" class="doors-screen">
         <h1>Select a Subject to Escape</h1>
         <div class="doors">
-            <div class="door" onclick="startQuiz('Math')">Maths</div>
-            <div class="door" onclick="startQuiz('Physics')">Physics</div>
-            <div class="door" onclick="startQuiz('Chemistry')">Chemistry</div>
+            <div class="door" onclick="startQuiz('Math')"><span>Maths</span></div>
+            <div class="door" onclick="startQuiz('Physics')"><span>Physics</span></div>
+            <div class="door" onclick="startQuiz('Chemistry')"><span>Chemistry</span></div>
         </div>
     </div>
 
@@ -468,7 +525,7 @@
                 points += 2;
                 document.getElementById("feedback").innerText = "Correct! 🎉 (+2 points)";
             } else {
-                points = Math.max(0, points - 1); 
+                points = Math.max(0, points - 1); // Prevent negative points
                 document.getElementById("feedback").innerText = "Incorrect. Try again! ❌ (-1 point)";
                 updatePointsDisplay();
                 return;
@@ -506,26 +563,26 @@
         }
 
         function resetGame() {
-           
+            // Reset all game variables
             points = 0;
             currentSubject = "";
             questionIndex = 0;
             classLevel = "";
             completedRooms = new Set();
 
-           
+            // Reset UI elements
             updatePointsDisplay();
             document.getElementById("username").value = "";
             document.getElementById("classSelect").value = "";
             document.getElementById("answerInput").value = "";
             document.getElementById("feedback").innerText = "";
 
-           
+            // Remove completed class from all doors
             document.querySelectorAll('.door').forEach(door => {
                 door.classList.remove('completed');
             });
 
-            
+            // Hide all screens except start screen
             document.getElementById("finalScreen").style.display = "none";
             document.getElementById("questionContainer").style.display = "none";
             document.getElementById("doorsScreen").style.display = "none";
