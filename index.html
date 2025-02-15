@@ -343,10 +343,39 @@
         .leaderboard-entry:last-child {
             border-bottom: none;
         }
+        
+        .sound-control {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+        
+        #muteButton {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
     </style>
 </head>
 
 <body>
+    <!-- Audio elements for game sounds -->
+    <audio id="correctSound" src="https://assets.mixkit.co/sfx/preview/mixkit-bonus-earned-in-video-game-2058.mp3"></audio>
+    <audio id="incorrectSound" src="https://assets.mixkit.co/sfx/preview/mixkit-failure-arcade-alert-notification-240.mp3"></audio>
+    <audio id="completedSound" src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3"></audio>
+    <audio id="gameOverSound" src="https://assets.mixkit.co/sfx/preview/mixkit-game-level-completed-2059.mp3"></audio>
+
+    <div class="sound-control">
+        <button id="muteButton" onclick="toggleMute()">🔊</button>
+    </div>
+
     <div class="points-display">Points: <span id="pointsCounter">0</span></div>
 
     <div id="startScreen" class="overlay">
@@ -415,6 +444,8 @@
         let username = "";
         let completedRooms = new Set();
         let leaderboard = [];
+        let muted = false;
+        
         const questions = {
             Math: {
                 6: {
@@ -442,7 +473,7 @@
                         "you find yourself in a grand hall with towering walls covered in mathematical symbols. At the center stands an ancient podium with glowing numbers inscribed on it. A deep voice echoes through the chamber 'To begin your escape, solve this equation written in flames: 2x² - 8 = 0.'",
                         "The flames flicker as you answer correctly, revealing a hidden staircase leading downward. You descend cautiously At the bottom, a locked iron gate stands before you. A sign reads 'Find the sum of the roots of the equation x² - 5x + 6 = 0.'",
                         "The gate creaks open, leading you to a vast library filled with floating books. One book glows brighter than the rest. You open it and see 'A sequence starts with 2, 4, 8, 16... What is the 6th term?'",
-                        "The book disintegrates, revealing a tunnel ahead. You crawl through it and emerge into a dimly lit chamber with a massive clock on the wall. The clock’s hands move erratically. A riddle appears 'If a train travels 120 km in 2 hours, what is its speed?'",
+                        "The book disintegrates, revealing a tunnel ahead. You crawl through it and emerge into a dimly lit chamber with a massive clock on the wall. The clock's hands move erratically. A riddle appears 'If a train travels 120 km in 2 hours, what is its speed?'",
                         "The clock resets, and a hidden door swings open, leading to the final challenge. A glowing cube levitates before you. A question appears on its surface 'The volume of a cube is 125 cubic units. What is the length of one side?'"
                     ],
                     answer: ["2", "5", "64", "60", "5"]
@@ -519,7 +550,40 @@
             if (localStorage.getItem('leaderboard')) {
                 leaderboard = JSON.parse(localStorage.getItem('leaderboard'));
             }
+            preloadSounds();
         };
+        
+        function preloadSounds() {
+            const sounds = [
+                "correctSound",
+                "incorrectSound",
+                "completedSound",
+                "gameOverSound"
+            ];
+            
+            sounds.forEach(sound => {
+                const audio = document.getElementById(sound);
+                audio.load();
+                audio.volume = 0.5; // Set volume to 50%
+            });
+        }
+        
+        function toggleMute() {
+            const sounds = [
+                "correctSound",
+                "incorrectSound",
+                "completedSound",
+                "gameOverSound"
+            ];
+            
+            muted = !muted;
+            
+            sounds.forEach(sound => {
+                document.getElementById(sound).muted = muted;
+            });
+            
+            document.getElementById("muteButton").textContent = muted ? "🔇" : "🔊";
+        }
 
         function updatePointsDisplay() {
             document.getElementById("pointsCounter").textContent = points;
@@ -606,9 +670,13 @@
             if (userAnswer === correctAnswer) {
                 points += 2;
                 document.getElementById("feedback").innerText = "Correct! 🎉 (+2 points)";
+                // Play correct sound
+                document.getElementById("correctSound").play();
             } else {
                 points = Math.max(0, points - 1); // Prevent negative points
                 document.getElementById("feedback").innerText = "Incorrect. Try again! ❌ (-1 point)";
+                // Play incorrect sound
+                document.getElementById("incorrectSound").play();
                 updatePointsDisplay();
                 return;
             }
@@ -620,6 +688,9 @@
                 typeQuestionText(questions[currentSubject][classLevel].question[questionIndex], "questionText");
                 document.getElementById("answerInput").value = "";
             } else {
+                // Play completed sound
+                document.getElementById("completedSound").play();
+                
                 completedRooms.add(currentSubject);
                 const doorElement = Array.from(document.getElementsByClassName('door'))
                     .find(door => door.textContent.includes(currentSubject));
